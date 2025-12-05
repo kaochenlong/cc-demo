@@ -41,6 +41,8 @@ for (let i = 0; i < faqData.length; i++) {
 
 await qdrant.upsert(COLLECTION_NAME, { points })
 
+// ---------------
+
 async function searchFAQ(query, options = {}) {
   const { limit = 3, category = null } = options
 

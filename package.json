@@ -2,7 +2,8 @@
   "dependencies": {
     "@google/genai": "^1.31.0",
     "@qdrant/js-client-rest": "^1.16.2",
-    "inquirer": "^12.11.1"
+    "inquirer": "^12.11.1",
+    "pdfjs-dist": "^5.4.449"
   },
   "type": "module"
 }
