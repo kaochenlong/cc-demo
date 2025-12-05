@@ -7,5 +7,8 @@
     "jsdom": "^27.2.0",
     "pdfjs-dist": "^5.4.449"
   },
+  "scripts": {
+    "chat": "node --env-file=.env ./ai-chat"
+  },
   "type": "module"
 }
