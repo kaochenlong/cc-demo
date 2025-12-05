@@ -1,6 +1,7 @@
 import qdrant from "./utils/qdrant.js"
 import ai from "./utils/google_ai.js"
 import { readFileSync } from "fs"
+import inquirer from "inquirer"
 
 const COLLECTION_NAME = "bank_faq"
 
@@ -76,4 +77,53 @@ async function searchFAQ(query, options = {}) {
   }))
 }
 
-console.log(await searchFAQ("年費"))
+async function chatWithFAQ(userMessage) {
+  // 搜尋相關 FAQ
+  const relevantFAQs = await searchFAQ(userMessage, { limit: 3 })
+
+  // 只取高相關度的結果
+  const goodResults = relevantFAQs.filter((r) => r.score > 0.7)
+
+  if (goodResults.length === 0) {
+    return "抱歉，我找不到相關的資訊。請問您可以換個方式描述問題嗎？"
+  }
+
+  // 建立 prompt
+  const context = goodResults
+    .map((r) => `Q: ${r.question}\nA: ${r.answer}`)
+    .join("\n\n")
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: userMessage,
+    config: {
+      systemInstruction: `你是一位專業的銀行櫃員。根據以下 FAQ 資料回答客戶問題。
+如果 FAQ 中沒有相關資訊，請誠實說不知道。
+
+FAQ 資料：
+${context}`
+    }
+  })
+
+  return response.text
+}
+
+console.log("銀行客服助理已啟動\n")
+
+while (true) {
+  const { userInput } = await inquirer.prompt([
+    {
+      type: "input",
+      name: "userInput",
+      message: "您:"
+    }
+  ])
+
+  if (userInput.toLowerCase() === "exit") {
+    console.log("感謝您的使用，再見！")
+    break
+  }
+
+  const answer = await chatWithFAQ(userInput)
+  console.log(`助理: ${answer}\n`)
+}
