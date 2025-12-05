@@ -36,11 +36,13 @@ async function fetchAndProcess(url) {
   return processHTML(html, url)
 }
 
+export { fetchAndProcess, processHTML }
+
 // 測試
-const result = await fetchAndProcess("https://kaochenlong.com/about.html")
-console.log("標題:", result.metadata.title)
-console.log("作者:", result.metadata.byline)
-console.log("摘要:", result.metadata.excerpt)
-console.log("---")
-console.log("內容預覽（前 300 字）:")
-console.log(result.content.slice(0, 300))
+// const result = await fetchAndProcess("https://kaochenlong.com/about.html")
+// console.log("標題:", result.metadata.title)
+// console.log("作者:", result.metadata.byline)
+// console.log("摘要:", result.metadata.excerpt)
+// console.log("---")
+// console.log("內容預覽（前 300 字）:")
+// console.log(result.content.slice(0, 300))

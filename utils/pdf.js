@@ -58,8 +58,10 @@ async function processPDFByPage(filepath) {
   return pages
 }
 
+export { processPDF, processPDFByPage }
+
 // 測試
-const result = await processPDF("./docs/labor-law.pdf")
-console.log("總頁數:", result.metadata.page_count)
-console.log("內容預覽（前 300 字）:")
-console.log(result.content.slice(0, 300))
+// const result = await processPDF("./docs/labor-law.pdf")
+// console.log("總頁數:", result.metadata.page_count)
+// console.log("內容預覽（前 300 字）:")
+// console.log(result.content.slice(0, 300))
