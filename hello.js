@@ -1,5 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({});
+import qdrant from "./utils/qdrant.js";
+import ai from "./utils/google_ai.js";
 
 console.log(ai);

@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@google/genai": "^1.31.0"
+    "@google/genai": "^1.31.0",
+    "@qdrant/js-client-rest": "^1.16.2"
   },
   "type": "module"
 }
