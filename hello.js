@@ -40,4 +40,40 @@ for (let i = 0; i < faqData.length; i++) {
 
 await qdrant.upsert(COLLECTION_NAME, { points })
 
-console.log(`已索引 ${points.length} 筆 FAQ`)
+async function searchFAQ(query, options = {}) {
+  const { limit = 3, category = null } = options
+
+  // 取得查詢的 embedding
+  const queryEmbedding = await ai.models.embedContent({
+    model: "gemini-embedding-001",
+    contents: query,
+    config: {
+      taskType: "RETRIEVAL_QUERY"
+    }
+  })
+
+  // 搜尋相似內容
+  const searchParams = {
+    vector: queryEmbedding.embeddings[0].values,
+    limit: limit,
+    with_payload: true
+  }
+
+  // 如果有類別過濾
+  if (category) {
+    searchParams.filter = {
+      must: [{ key: "category", match: { value: category } }]
+    }
+  }
+
+  const results = await qdrant.search(COLLECTION_NAME, searchParams)
+
+  return results.map((r) => ({
+    score: r.score,
+    question: r.payload.question,
+    answer: r.payload.answer,
+    category: r.payload.category
+  }))
+}
+
+console.log(await searchFAQ("年費"))
